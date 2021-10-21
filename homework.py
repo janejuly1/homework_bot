@@ -10,7 +10,7 @@ import telegram
 load_dotenv()
 
 
-PRACTICUM_TOKEN = os.getenv('TOKEN')
+PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TOKEN')
 CHAT_ID = os.getenv('ACCOUNT_SID')
 
