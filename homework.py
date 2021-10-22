@@ -33,6 +33,7 @@ HOMEWORKS = {}
 
 def send_message(bot, message):
     """Informs user about the status of homework."""
+    logger.info("sending message=%s to chat_id=%s", message, CHAT_ID)
     bot.send_message(
         chat_id=CHAT_ID,
         text=message,
@@ -41,11 +42,15 @@ def send_message(bot, message):
 
 def get_api_answer(url, current_timestamp):
     """Get json data from API."""
+    logger.debug(
+        "runnig get_api_answer with params url=%s and current_timestamp=%s",
+        url, current_timestamp
+    )
     headers = {'Authorization': f'OAuth {PRACTICUM_TOKEN}'}
     payload = {'from_date': current_timestamp}
 
     try:
-        response = requests.get(ENDPOINT, headers=headers, params=payload)
+        response = requests.get(url, headers=headers, params=payload)
     except Exception as error:
         logger.error(f'Ошибка при запросе к основному API: {error}')
         raise error
@@ -66,6 +71,7 @@ def get_api_answer(url, current_timestamp):
 
 def parse_status(homework):
     """Get a status of homework from json."""
+    logger.debug("runnig parse_status with params homework=%s", homework)
     status = homework['status']
     homework_name = homework['homework_name']
 
@@ -82,6 +88,7 @@ def parse_status(homework):
 
 def check_response(response):
     """Check correctness of json."""
+    logger.debug("runnig check_response with params response=%s", response)
     if 'homeworks' not in response:
         raise RuntimeError('Отсутствует обязательное поле "homeworks"')
 
@@ -104,6 +111,7 @@ def check_response(response):
 
 def main():
     """Launches check homework statuses bot ."""
+    logger.debug("app starting")
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = 0
 
