@@ -14,6 +14,11 @@ PRACTICUM_TOKEN = os.getenv('PRACTICUM_TOKEN')
 TELEGRAM_TOKEN = os.getenv('TOKEN')
 CHAT_ID = os.getenv('ACCOUNT_SID')
 
+logging.basicConfig(
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+
 RETRY_TIME = 600
 ENDPOINT = 'https://practicum.yandex.ru/api/user_api/homework_statuses/'
 
@@ -42,18 +47,18 @@ def get_api_answer(url, current_timestamp):
     try:
         response = requests.get(ENDPOINT, headers=headers, params=payload)
     except Exception as error:
-        logging.error(f'Ошибка при запросе к основному API: {error}')
+        logger.error(f'Ошибка при запросе к основному API: {error}')
         raise error
 
     if response.status_code != 200:
-        logging.error('Ошибка при запросе к основному API: status_code != 200')
+        logger.error('Ошибка при запросе к основному API: status_code != 200')
         raise RuntimeError(
             'Ошибка при запросе к основному API: status_code != 200')
 
     try:
         response = response.json()
     except Exception as error:
-        logging.error(f'Ошибка парсинга JSON: {error}')
+        logger.error(f'Ошибка парсинга JSON: {error}')
         raise error
 
     return response
@@ -90,7 +95,7 @@ def check_response(response):
         if 'status' not in homework:
             raise RuntimeError('Отсутствует обязательное поле "status"')
 
-        if homework['status'] not in HOMEWORK_STATUSES.keys():
+        if homework['status'] not in HOMEWORK_STATUSES:
             status = homework['status']
             raise RuntimeError(f'Неизвестный статус "{status}"')
 
@@ -115,11 +120,10 @@ def main():
             time.sleep(RETRY_TIME)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
-            logging.error(message)
+            logger.error(message)
             time.sleep(RETRY_TIME)
             continue
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
     main()
