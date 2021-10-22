@@ -105,7 +105,7 @@ def check_response(response):
 def main():
     """Launches check homework statuses bot ."""
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = int(time.time())
+    current_timestamp = 0
 
     while True:
         try:
