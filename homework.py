@@ -35,7 +35,7 @@ def send_message(bot, message):
     """Informs user about the status of homework."""
     bot.send_message(
         chat_id=CHAT_ID,
-        message=message,
+        text=message,
     )
 
 
