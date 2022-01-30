@@ -113,7 +113,7 @@ def main():
     """Launches check homework statuses bot ."""
     logger.debug("app starting")
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
-    current_timestamp = 0
+    current_timestamp = int(time.time())
 
     while True:
         try:
@@ -124,7 +124,7 @@ def main():
                 if message is not None:
                     send_message(bot, message)
 
-            current_timestamp = int(time.time())
+            current_timestamp = int(response['current_date'])
             time.sleep(RETRY_TIME)
         except Exception as error:
             message = f'Сбой в работе программы: {error}'
